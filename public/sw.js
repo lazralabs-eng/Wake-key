@@ -1,5 +1,5 @@
 // Bump VERSION on every content change so iPads pick up the new shell.
-const VERSION = 'wake-key-v3';
+const VERSION = 'wake-key-v4';
 const SHELL = ['./', 'index.html', 'styles.css', 'app.js', 'manifest.webmanifest',
   'data/pronunciations.json', 'data/readaloud.json', 'audio/index.json', 'icons/icon-192.png', 'icons/apple-touch-icon.png'];
 
@@ -26,10 +26,13 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET' || new URL(req.url).origin !== location.origin) return;
+  // Leave partial (Range) requests to the network. Answering them from the
+  // cache with a whole file makes Safari refuse to play the audio.
+  if (req.headers.has('range')) return;
   const isAudio = req.url.includes('/audio/') && req.url.endsWith('.mp3');
   // Audio: cache first (clips never change name). Everything else: network first, cache fallback.
   e.respondWith(isAudio
-    ? caches.match(req).then(hit => hit || fetch(req).then(res => { const cp = res.clone(); caches.open(VERSION).then(c => c.put(req, cp)); return res; }))
-    : fetch(req).then(res => { const cp = res.clone(); caches.open(VERSION).then(c => c.put(req, cp)); return res; })
+    ? caches.match(req).then(hit => hit || fetch(req).then(res => { if (res.status === 200) { const cp = res.clone(); caches.open(VERSION).then(c => c.put(req, cp)); } return res; }))
+    : fetch(req).then(res => { if (res.status === 200) { const cp = res.clone(); caches.open(VERSION).then(c => c.put(req, cp)); } return res; })
         .catch(() => caches.match(req).then(hit => hit || caches.match('index.html'))));
 });

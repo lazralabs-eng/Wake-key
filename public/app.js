@@ -519,7 +519,7 @@ function syncFields(){
 
 
 /* ---------- pronunciation ---------- */
-var SAY=[], READ=[], READV={}, AUDIO={}, sayAudio=null, playQueue=null, queueBtn=null, irishVoice=null;
+var SAY=[], READ=[], READV={}, AUDIO={}, BLOBS={}, sayAudio=null, playQueue=null, queueBtn=null, irishVoice=null;
 function itemById(id){return SAY.concat(READ).filter(function(x){return x.id===id;})[0];}
 var ICON_PLAY='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
 var ICON_STOP='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10v10H7z"/></svg>';
@@ -568,26 +568,59 @@ function resetQueue(){
   $('#playread').textContent='Play the passage';
   queueBtn=null;
 }
+/* One shared audio element. iOS only lets a page play sound from an element
+   the person has tapped to start, so reusing a single element keeps the
+   passage queue playing after the first line. */
+var player=null, playerToken=0;
+function getPlayer(){
+  if(!player){
+    player=document.createElement('audio');
+    player.setAttribute('playsinline','');player.preload='auto';
+    player.style.display='none';document.body.appendChild(player);
+  }
+  return player;
+}
+function sayStatus(msg){['#saystatus','#readstatus'].forEach(function(sel){var el=$(sel);if(el)el.textContent=msg||'';});}
+/* Load every clip into memory once. Clips played from memory avoid iOS
+   Safari's partial-download requests, which break playback in installed apps. */
+function prefetchAudio(){
+  Object.keys(AUDIO).forEach(function(id){
+    var f=AUDIO[id]; if(!f||BLOBS[id])return;
+    fetch('audio/'+f).then(function(r){if(!r.ok)throw new Error(r.status);return r.blob();})
+      .then(function(b){BLOBS[id]=URL.createObjectURL(b);}).catch(function(){});
+  });
+}
 function stopSay(){
-  if(sayAudio){try{sayAudio.pause();}catch(e){}sayAudio=null;}
+  playerToken++;
+  if(player){try{player.pause();}catch(e){}player.onended=null;player.onerror=null;}
   try{if(window.speechSynthesis)speechSynthesis.cancel();}catch(e){}
   $$('.say.playing').forEach(function(r){r.classList.remove('playing');var b=$('.playbtn',r);if(b)b.innerHTML=ICON_PLAY;});
 }
 function playSay(id,done){
   var it=itemById(id); if(!it)return;
   stopSay();
+  var token=playerToken;
   var row=document.getElementById('say-'+id),btn=$('.playbtn',row);
-  row.classList.add('playing');btn.innerHTML=ICON_STOP;
-  var slow=$('#slow').checked;
-  function end(){row.classList.remove('playing');btn.innerHTML=ICON_PLAY;if(done)done();}
-  if(AUDIO[id]){
-    var a=new Audio('audio/'+AUDIO[id]);sayAudio=a;
-    a.playbackRate=slow?0.75:1;try{a.preservesPitch=true;}catch(e){}
-    a.onended=end;a.onerror=function(){$('#saystatus').textContent='That clip could not load. Using the device voice.';AUDIO[id]=null;speak();};
-    var pr=a.play(); if(pr&&pr.catch)pr.catch(function(){end();$('#saystatus').textContent='Tap play again to start audio.';});
+  row.classList.add('playing');btn.innerHTML=ICON_STOP;sayStatus('');
+  var slow=$('#slow')&&$('#slow').checked;
+  var finished=false;
+  function end(){if(finished||token!==playerToken)return;finished=true;row.classList.remove('playing');btn.innerHTML=ICON_PLAY;if(done)done();}
+  var src=BLOBS[id]||(AUDIO[id]?'audio/'+AUDIO[id]:null);
+  if(src){
+    var a=getPlayer();
+    a.onended=end;
+    a.onerror=function(){if(token!==playerToken)return;sayStatus('That clip could not load, so your device voice is reading it.');speak();};
+    a.src=src;
+    a.defaultPlaybackRate=a.playbackRate=slow?0.75:1;try{a.preservesPitch=true;}catch(e){}
+    var pr=a.play();
+    if(pr&&pr.catch)pr.catch(function(err){
+      if(token!==playerToken)return;
+      if(err&&err.name==='NotAllowedError'){finished=true;row.classList.remove('playing');btn.innerHTML=ICON_PLAY;playQueue=null;resetQueue();sayStatus('Your device blocked audio. Tap a play button to start.');}
+      else{sayStatus('That clip could not play, so your device voice is reading it.');speak();}
+    });
   }else{speak();}
   function speak(){
-    if(!window.speechSynthesis){end();$('#saystatus').textContent='No voice is available on this device.';return;}
+    if(!window.speechSynthesis){end();sayStatus('No voice is available on this device.');return;}
     var u=new SpeechSynthesisUtterance(it.speak||it.text);
     if(irishVoice){u.voice=irishVoice;u.lang=irishVoice.lang;}else{u.lang='en-IE';}
     u.rate=slow?0.7:0.9;u.onend=end;u.onerror=end;
@@ -599,7 +632,7 @@ function loadSay(){
     fetch('data/pronunciations.json').then(function(r){return r.json();}),
     fetch('audio/index.json').then(function(r){return r.ok?r.json():{};}).catch(function(){return {};}),
     fetch('data/readaloud.json').then(function(r){return r.json();}).catch(function(){return {items:[]};})
-  ]).then(function(res){SAY=res[0].items||[];AUDIO=res[1]||{};READ=res[2].items||[];READV=res[2].voices||{};if(res[2].speakers_note)$('#speakernote').textContent=res[2].speakers_note;renderRead();renderSay();})
+  ]).then(function(res){SAY=res[0].items||[];AUDIO=res[1]||{};READ=res[2].items||[];READV=res[2].voices||{};prefetchAudio();if(res[2].speakers_note)$('#speakernote').textContent=res[2].speakers_note;renderRead();renderSay();})
   .catch(function(){$('#saylist').innerHTML='<div class="empty">The pronunciation list could not load. Check your connection and reload.</div>';});
 }
 document.addEventListener('click',function(e){
