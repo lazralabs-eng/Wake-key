@@ -6,7 +6,7 @@ An original reader's key to James Joyce's *Finnegans Wake*, built as an installa
 - **Cast**: the family and their many masks
 - **Chapters**: all 17, with tap-to-open notes tagged Solid, Likely or Debated
 - **Words**: portmanteau coinages split into their languages
-- **Say it**: pronunciation in a Dublin voice, with respellings
+- **Say it**: a read-aloud of key lines from Anna Livia Plurabelle (I.8) in a female Dublin voice, plus pronunciation of names and coinages with respellings
 - **Motifs**: nine recurring shapes, linked to chapters
 - **My notes**: your marginalia, kept on your device, exportable as Markdown
 
@@ -41,11 +41,15 @@ Every push to `main` deploys. Add a custom domain under the Pages project's **Cu
 
 ## Pronunciation audio
 
-Clips are generated with the ElevenLabs API and committed to `public/audio/`. The page plays them when present and falls back to the device's own voice (an Irish English voice where the device has one) when they are not.
+Clips are generated with the ElevenLabs API from two lists, each with its own voice, and committed to `public/audio/`:
+
+- `public/data/pronunciations.json`: names and coinages (Sean, Dublin narrator)
+- `public/data/readaloud.json`: the I.8 read-aloud (Sinéad, warm female Irish voice; includes per-voice settings such as `speed`)
+ The page plays them when present and falls back to the device's own voice (an Irish English voice where the device has one) when they are not.
 
 **One-time setup:** in GitHub, go to **Settings > Secrets and variables > Actions** and add a secret `ELEVENLABS_API_KEY`. Optional: a variable `ELEVEN_MODEL` to change the model (default `eleven_multilingual_v2`).
 
-**Generate:** the *Generate pronunciation audio* workflow runs whenever `public/data/pronunciations.json` changes on `main`, or by hand from the **Actions** tab. It only generates missing or changed clips.
+**Generate:** the *Generate pronunciation audio* workflow runs whenever either list changes on `main`, or by hand from the **Actions** tab. It only generates missing or changed clips.
 
 Locally:
 
@@ -55,7 +59,7 @@ ELEVENLABS_API_KEY=... npm run audio -- --only=quarks,howth
 ELEVENLABS_API_KEY=... npm run audio:force       # everything
 ```
 
-**Add a phrase:** add an item to `public/data/pronunciations.json`:
+**Add a phrase:** add an item to either list. Keep read-aloud fragments short (under 15 words each); the Wake is still under copyright in the US.
 
 ```json
 {"id": "shaun-post", "text": "Shaun the Post", "say": "SHAWN the POST", "note": "Optional context."}
@@ -63,7 +67,7 @@ ELEVENLABS_API_KEY=... npm run audio:force       # everything
 
 Use `speak` when the voice mispronounces the written form; it is what gets spoken, while `text` is what is shown.
 
-If the API returns a voice-not-found error, add the voice to **My Voices** in your ElevenLabs account first. Library voices must be in your account before the API can use them.
+If the API returns a voice-not-found error, add the voice (Sean or Sinéad) to **My Voices** in your ElevenLabs account first. Library voices must be in your account before the API can use them.
 
 ## Updating content
 

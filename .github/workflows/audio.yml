@@ -1,7 +1,7 @@
 name: Generate pronunciation audio
 
 # Run by hand from the Actions tab (works from the GitHub app on iPad too),
-# or automatically when the pronunciation list changes on main.
+# or automatically when either audio list changes on main.
 on:
   workflow_dispatch:
     inputs:
@@ -15,7 +15,7 @@ on:
         default: ''
   push:
     branches: [main]
-    paths: [public/data/pronunciations.json]
+    paths: [public/data/pronunciations.json, public/data/readaloud.json]
 
 permissions:
   contents: write

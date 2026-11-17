@@ -185,3 +185,9 @@ header.top{padding-top:max(28px,env(safe-area-inset-top))}
 .wrap{padding-left:max(18px,env(safe-area-inset-left));padding-right:max(18px,env(safe-area-inset-right))}
 footer{padding-bottom:max(40px,env(safe-area-inset-bottom))}
 @media (display-mode: standalone){.tabs{padding-top:env(safe-area-inset-top)}}
+
+/* Read aloud */
+.readlist .say{grid-template-columns:auto 1fr}
+.readt{font-style:italic;font-size:20px}
+.readmeta{font-size:13px;color:var(--muted);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.say.read .saynote{max-width:62ch}

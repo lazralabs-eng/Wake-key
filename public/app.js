@@ -99,7 +99,7 @@ var CH=[
  {id:'I.8',b:'I',t:'Anna Livia Plurabelle',pp:'196-216',g:'Two washerwomen gossip while the river runs.',
   tags:['river','rumor'],
   body:'Two washerwomen on opposite banks of the Liffey wring out clothes and gossip about [[ALP|alp]], who is also the river. Their talk thickens into water-sounds, and at dusk the women turn into a tree and a stone. The river runs on. Joyce recorded a passage from this chapter in 1929, and it is the best place to start reading. The gossip is rumor again, now told from below.',
-  tip:'Read it aloud. If you read only one chapter, read this one.'},
+  tip:'Read it aloud. If you read only one chapter, read this one. The Say it tab has a read-aloud of its key lines.'},
  {id:'II.1',b:'II',t:'Children\'s hour',pp:'219-259',g:'A street game that replays the brothers\' rivalry.',
   tags:['brothers','thunder'],
   body:'Evening in the pub\'s street. Children play a guessing game in which [[Glugg|glugg]] must name the colors Issy and her girlfriends have chosen, and he fails. The game is the brothers\' rivalry in play form, with Issy as the prize. Rhyme and chant carry the chapter, and the parents call everyone in at the end.',
@@ -222,7 +222,7 @@ function showTab(name){
     $('#panel-'+t).classList.toggle('on',on);
   });
   if(name==='notes')renderNotes();
-  if(name!=='say'&&typeof stopSay==='function'){playQueue=null;stopSay();}
+  if(name!=='say'&&typeof stopSay==='function'){resetQueue();stopSay();}
 }
 $('#tablist').addEventListener('click',function(e){
   var b=e.target.closest('.tab'); if(!b)return;
@@ -519,7 +519,8 @@ function syncFields(){
 
 
 /* ---------- pronunciation ---------- */
-var SAY=[], AUDIO={}, sayAudio=null, playQueue=null, irishVoice=null;
+var SAY=[], READ=[], AUDIO={}, sayAudio=null, playQueue=null, queueBtn=null, irishVoice=null;
+function itemById(id){return SAY.concat(READ).filter(function(x){return x.id===id;})[0];}
 var ICON_PLAY='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
 var ICON_STOP='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10v10H7z"/></svg>';
 function pickVoice(){
@@ -541,13 +542,38 @@ function renderSay(){
   }).join('');
   applyFilters();
 }
+function renderRead(){
+  $('#readlist').innerHTML=READ.map(function(it,i){
+    var src=AUDIO[it.id]?'Dublin voice':'Device voice';
+    return '<div class="say read" id="say-'+it.id+'">'+
+      '<button type="button" class="playbtn" data-say="'+it.id+'" aria-label="Play line '+(i+1)+'">'+ICON_PLAY+'</button>'+
+      '<div class="sayt readt">'+esc(it.text)+'<span class="src">'+src+'</span></div>'+
+      '<div class="readmeta">Line '+(i+1)+' of '+READ.length+' · '+lvl(it.l)+'</div>'+
+      '<p class="saynote">'+esc(it.note)+'</p></div>';
+  }).join('');
+}
+function runQueue(ids,btn,label){
+  playQueue=ids.slice();queueBtn=btn;btn.textContent='Stop';
+  (function next(){
+    if(!playQueue||!playQueue.length){playQueue=null;btn.textContent=label;queueBtn=null;return;}
+    var id=playQueue.shift();
+    var row=document.getElementById('say-'+id); if(row&&row.scrollIntoView)row.scrollIntoView({block:'nearest',behavior:reduce?'auto':'smooth'});
+    playSay(id,function(){setTimeout(next,700);});
+  })();
+}
+function resetQueue(){
+  playQueue=null;
+  $('#playall').textContent='Play all in order';
+  $('#playread').textContent='Play the passage';
+  queueBtn=null;
+}
 function stopSay(){
   if(sayAudio){try{sayAudio.pause();}catch(e){}sayAudio=null;}
   try{if(window.speechSynthesis)speechSynthesis.cancel();}catch(e){}
   $$('.say.playing').forEach(function(r){r.classList.remove('playing');var b=$('.playbtn',r);if(b)b.innerHTML=ICON_PLAY;});
 }
 function playSay(id,done){
-  var it=SAY.filter(function(x){return x.id===id;})[0]; if(!it)return;
+  var it=itemById(id); if(!it)return;
   stopSay();
   var row=document.getElementById('say-'+id),btn=$('.playbtn',row);
   row.classList.add('playing');btn.innerHTML=ICON_STOP;
@@ -570,23 +596,21 @@ function playSay(id,done){
 function loadSay(){
   Promise.all([
     fetch('data/pronunciations.json').then(function(r){return r.json();}),
-    fetch('audio/index.json').then(function(r){return r.ok?r.json():{};}).catch(function(){return {};})
-  ]).then(function(res){SAY=res[0].items||[];AUDIO=res[1]||{};renderSay();})
+    fetch('audio/index.json').then(function(r){return r.ok?r.json():{};}).catch(function(){return {};}),
+    fetch('data/readaloud.json').then(function(r){return r.json();}).catch(function(){return {items:[]};})
+  ]).then(function(res){SAY=res[0].items||[];AUDIO=res[1]||{};READ=res[2].items||[];renderRead();renderSay();})
   .catch(function(){$('#saylist').innerHTML='<div class="empty">The pronunciation list could not load. Check your connection and reload.</div>';});
 }
 document.addEventListener('click',function(e){
   var b=e.target.closest('[data-say]');
-  if(b){playQueue=null;$('#playall').textContent='Play all in order';var row=b.closest('.say');if(row.classList.contains('playing')){stopSay();}else{playSay(b.getAttribute('data-say'));}return;}
-  if(e.target.closest('#playall')){
-    if(playQueue){playQueue=null;stopSay();$('#playall').textContent='Play all in order';return;}
-    var ids=$$('#saylist .say').filter(function(r){return !r.hidden;}).map(function(r){return r.id.slice(4);});
-    playQueue=ids.slice();$('#playall').textContent='Stop';
-    (function next(){
-      if(!playQueue||!playQueue.length){playQueue=null;$('#playall').textContent='Play all in order';return;}
-      var id=playQueue.shift();
-      var row=document.getElementById('say-'+id); if(row&&row.scrollIntoView)row.scrollIntoView({block:'nearest',behavior:reduce?'auto':'smooth'});
-      playSay(id,function(){setTimeout(next,600);});
-    })();
+  if(b){resetQueue();var row=b.closest('.say');if(row.classList.contains('playing')){stopSay();}else{playSay(b.getAttribute('data-say'));}return;}
+  var pa=e.target.closest('#playall'),pr=e.target.closest('#playread');
+  if(pa||pr){
+    var btn=pa||pr,wasThis=(queueBtn===btn);
+    resetQueue();stopSay();
+    if(wasThis)return;
+    var ids=pa?$$('#saylist .say').filter(function(r){return !r.hidden;}).map(function(r){return r.id.slice(4);}):READ.map(function(x){return x.id;});
+    runQueue(ids,btn,pa?'Play all in order':'Play the passage');
   }
 });
 
