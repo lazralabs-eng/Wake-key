@@ -440,6 +440,7 @@ document.addEventListener('click',function(e){
   if(go){
     var v=go.getAttribute('data-go');
     if(v.indexOf('ch:')===0){openChapter(v.slice(3));}
+    else if(v==='loop'){showTab('say');try{location.hash='say';}catch(err){}var ls=document.getElementById('loopsec');if(ls)ls.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});}
     else if(v.indexOf('tab:')===0){var n=v.slice(4);showTab(n);try{location.hash=n;}catch(err){}}
     return;
   }
@@ -519,8 +520,8 @@ function syncFields(){
 
 
 /* ---------- pronunciation ---------- */
-var SAY=[], READ=[], READV={}, AUDIO={}, BLOBS={}, sayAudio=null, playQueue=null, queueBtn=null, irishVoice=null;
-function itemById(id){return SAY.concat(READ).filter(function(x){return x.id===id;})[0];}
+var SAY=[], READ=[], LOOP=[], READV={}, AUDIO={}, BLOBS={}, sayAudio=null, playQueue=null, queueBtn=null, irishVoice=null;
+function itemById(id){return SAY.concat(READ,LOOP).filter(function(x){return x.id===id;})[0];}
 var ICON_PLAY='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
 var ICON_STOP='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10v10H7z"/></svg>';
 function pickVoice(){
@@ -553,19 +554,30 @@ function renderRead(){
       '<p class="saynote">'+esc(it.note)+'</p></div>';
   }).join('');
 }
-function runQueue(ids,btn,label){
+function renderLoop(){
+  $('#looplist').innerHTML=LOOP.map(function(it){
+    var src=AUDIO[it.id]?'Irish voice':'Device voice';
+    return '<div class="say read" id="say-'+it.id+'">'+
+      '<button type="button" class="playbtn" data-say="'+it.id+'" aria-label="Play: '+esc(it.where)+'">'+ICON_PLAY+'</button>'+
+      '<div class="sayt readt">'+esc(it.text)+'<span class="src">'+src+'</span></div>'+
+      '<div class="readmeta"><span class="who">'+esc(it.where)+'</span>'+lvl(it.l)+'</div>'+
+      '<p class="saynote">'+esc(it.note)+'</p></div>';
+  }).join('');
+}
+function runQueue(ids,btn,label,gap){
   playQueue=ids.slice();queueBtn=btn;btn.textContent='Stop';
   (function next(){
     if(!playQueue||!playQueue.length){playQueue=null;btn.textContent=label;queueBtn=null;return;}
     var id=playQueue.shift();
     var row=document.getElementById('say-'+id); if(row&&row.scrollIntoView)row.scrollIntoView({block:'nearest',behavior:reduce?'auto':'smooth'});
-    playSay(id,function(){setTimeout(next,700);});
+    playSay(id,function(){setTimeout(next,gap==null?700:gap);});
   })();
 }
 function resetQueue(){
   playQueue=null;
   $('#playall').textContent='Play all in order';
   $('#playread').textContent='Play the passage';
+  $('#playloop').textContent='Play the loop';
   queueBtn=null;
 }
 /* One shared audio element. iOS only lets a page play sound from an element
@@ -631,14 +643,19 @@ function loadSay(){
   Promise.all([
     fetch('data/pronunciations.json').then(function(r){return r.json();}),
     fetch('audio/index.json').then(function(r){return r.ok?r.json():{};}).catch(function(){return {};}),
-    fetch('data/readaloud.json').then(function(r){return r.json();}).catch(function(){return {items:[]};})
-  ]).then(function(res){SAY=res[0].items||[];AUDIO=res[1]||{};READ=res[2].items||[];READV=res[2].voices||{};prefetchAudio();if(res[2].speakers_note)$('#speakernote').textContent=res[2].speakers_note;renderRead();renderSay();})
+    fetch('data/readaloud.json').then(function(r){return r.json();}).catch(function(){return {items:[]};}),
+    fetch('data/loop.json').then(function(r){return r.json();}).catch(function(){return {items:[]};})
+  ]).then(function(res){SAY=res[0].items||[];AUDIO=res[1]||{};READ=res[2].items||[];READV=res[2].voices||{};LOOP=res[3].items||[];renderLoop();prefetchAudio();if(res[2].speakers_note)$('#speakernote').textContent=res[2].speakers_note;renderRead();renderSay();})
   .catch(function(){$('#saylist').innerHTML='<div class="empty">The pronunciation list could not load. Check your connection and reload.</div>';});
 }
 document.addEventListener('click',function(e){
   var b=e.target.closest('[data-say]');
   if(b){resetQueue();var row=b.closest('.say');if(row.classList.contains('playing')){stopSay();}else{playSay(b.getAttribute('data-say'));}return;}
-  var pa=e.target.closest('#playall'),pr=e.target.closest('#playread');
+  var pa=e.target.closest('#playall'),pr=e.target.closest('#playread'),pl=e.target.closest('#playloop');
+  if(pl){
+    var was=(queueBtn===pl);resetQueue();stopSay();if(was)return;
+    runQueue(LOOP.map(function(x){return x.id;}),pl,'Play the loop',120);return;
+  }
   if(pa||pr){
     var btn=pa||pr,wasThis=(queueBtn===btn);
     resetQueue();stopSay();

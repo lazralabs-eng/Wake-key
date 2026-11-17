@@ -1,7 +1,7 @@
 // Bump VERSION on every content change so iPads pick up the new shell.
-const VERSION = 'wake-key-v4';
+const VERSION = 'wake-key-v5';
 const SHELL = ['./', 'index.html', 'styles.css', 'app.js', 'manifest.webmanifest',
-  'data/pronunciations.json', 'data/readaloud.json', 'audio/index.json', 'icons/icon-192.png', 'icons/apple-touch-icon.png'];
+  'data/pronunciations.json', 'data/readaloud.json', 'data/loop.json', 'audio/index.json', 'icons/icon-192.png', 'icons/apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil((async () => {

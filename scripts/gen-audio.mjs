@@ -18,7 +18,7 @@ import { createHash } from 'node:crypto';
 import path from 'node:path';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
-const SOURCES = ['public/data/pronunciations.json', 'public/data/readaloud.json'].map(f => path.join(ROOT, f));
+const SOURCES = ['public/data/pronunciations.json', 'public/data/readaloud.json', 'public/data/loop.json'].map(f => path.join(ROOT, f));
 const OUT = path.join(ROOT, 'public/audio');
 const INDEX = path.join(OUT, 'index.json');
 

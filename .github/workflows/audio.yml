@@ -15,7 +15,7 @@ on:
         default: ''
   push:
     branches: [main]
-    paths: [public/data/pronunciations.json, public/data/readaloud.json]
+    paths: [public/data/pronunciations.json, public/data/readaloud.json, public/data/loop.json]
 
 permissions:
   contents: write

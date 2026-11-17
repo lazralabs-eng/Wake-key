@@ -44,6 +44,7 @@ Every push to `main` deploys. Add a custom domain under the Pages project's **Cu
 Clips are generated with the ElevenLabs API from two lists, each with its own voice, and committed to `public/audio/`:
 
 - `public/data/pronunciations.json`: names and coinages (Sean, Dublin narrator)
+- `public/data/loop.json`: the book's last words running into its first (Sinéad)
 - `public/data/readaloud.json`: the I.8 read-aloud as a dialogue. `voices` maps each `speaker` (a, b) to a voice: Sinéad and Aoife, both female Irish voices, with per-voice settings such as `speed`
  The page plays them when present and falls back to the device's own voice (an Irish English voice where the device has one) when they are not.
 

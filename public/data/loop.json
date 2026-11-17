@@ -1,0 +1,14 @@
+{
+  "title": "The loop",
+  "voice": {
+    "name": "Sinéad - Confident, Irish, warm",
+    "voice_id": "HHgUYJWWgtxj4ev19y6l",
+    "settings": { "stability": 0.5, "similarity_boost": 0.8, "style": 0.35, "use_speaker_boost": true, "speed": 0.9 }
+  },
+  "items": [
+    {"id": "loop-end", "where": "Last words, page 628", "text": "A way a lone a last a loved a long the", "l": "solid",
+     "note": "ALP, the river, running out to sea at dawn. The book stops here with no full stop, on the word the."},
+    {"id": "loop-start", "where": "First words, page 3", "text": "riverrun, past Eve and Adam's, from swerve of shore to bend of bay,", "l": "solid",
+     "note": "No capital letter, because this is the rest of the sentence: a long the riverrun. Eve and Adam's turns round the name of a church on the Liffey quays in Dublin."}
+  ]
+}
