@@ -1,0 +1,16 @@
+{
+  "name": "Finnegans Wake Key",
+  "short_name": "Wake Key",
+  "description": "An original reader's key to Finnegans Wake.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0c131c",
+  "theme_color": "#0c131c",
+  "icons": [
+    {"src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png"},
+    {"src": "icons/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}

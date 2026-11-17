@@ -1,0 +1,12 @@
+{
+  "name": "wake-key",
+  "private": true,
+  "type": "module",
+  "description": "An original reader's key to Finnegans Wake, built as an installable web app.",
+  "scripts": {
+    "dev": "npx --yes serve public -l 4173",
+    "audio": "node scripts/gen-audio.mjs",
+    "audio:force": "node scripts/gen-audio.mjs --force"
+  },
+  "engines": { "node": ">=20" }
+}

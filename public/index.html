@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="An original reader's key to Finnegans Wake: map, cast, chapters, word decoder, pronunciation and your own notes.">
+<meta name="theme-color" content="#0c131c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Wake Key">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<title>Finnegans Wake Key</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <div class="eyebrow">Reader's key</div>
+  <h1>Finnegans Wake Key</h1>
+  <p class="sub">An original guide to the book's shape, cast, chapters and wordplay. Click any dotted phrase for a note, then add your own. Your marginalia saves in this browser.</p>
+  <div class="tools" style="margin-top:16px">
+    <div class="search"><label class="sr" for="q">Search the key</label><input id="q" type="search" placeholder="Search masks, motifs, words" autocomplete="off"></div>
+    <div class="prog" aria-live="polite"><span id="progtxt">0 of 17 chapters read</span><div class="bar"><i id="progbar"></i></div></div>
+  </div>
+</div></header>
+
+<nav class="tabs" aria-label="Sections"><div class="wrap" role="tablist" id="tablist">
+  <button class="tab" role="tab" id="tab-map" aria-controls="panel-map" aria-selected="true">Map</button>
+  <button class="tab" role="tab" id="tab-cast" aria-controls="panel-cast" aria-selected="false">Cast</button>
+  <button class="tab" role="tab" id="tab-chapters" aria-controls="panel-chapters" aria-selected="false">Chapters</button>
+  <button class="tab" role="tab" id="tab-words" aria-controls="panel-words" aria-selected="false">Words</button>
+  <button class="tab" role="tab" id="tab-say" aria-controls="panel-say" aria-selected="false">Say it</button>
+  <button class="tab" role="tab" id="tab-motifs" aria-controls="panel-motifs" aria-selected="false">Motifs</button>
+  <button class="tab" role="tab" id="tab-notes" aria-controls="panel-notes" aria-selected="false">My notes <span id="ncount"></span></button>
+</div></nav>
+
+<main><div class="wrap">
+
+<section class="panel on" id="panel-map" role="tabpanel" aria-labelledby="tab-map">
+  <h2>The shape of the book</h2>
+  <p class="lede">Seventeen chapters in four books, built on Giambattista Vico's idea that history moves through an age of gods, an age of heroes, an age of ordinary people, and then a return. Joyce ends mid-sentence so the last line runs into the first. Pick a book on the ring.</p>
+  <div class="mapgrid">
+    <div class="ringbox">
+      <svg id="ring" viewBox="0 0 360 360" role="group" aria-label="The four books arranged in a cycle"></svg>
+      <p class="meta">Select a segment. The cycle runs clockwise.</p>
+    </div>
+    <div>
+      <div class="card" id="bookinfo" aria-live="polite"></div>
+      <div class="start">
+        <h3>Where to start</h3>
+        <div class="row">
+          <button class="btn primary" data-go="ch:I.8">Read I.8 first</button>
+          <button class="btn" data-go="ch:IV">See the ending</button>
+          <button class="btn" data-go="tab:words">Decode a word</button>
+          <button class="btn" data-go="tab:cast">Meet the family</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="panel" id="panel-cast" role="tabpanel" aria-labelledby="tab-cast">
+  <h2>The cast and their masks</h2>
+  <p class="lede">Everyone in the book is also someone else. The family stays fixed while the costumes change, so learn the family first and treat every new name as a mask.</p>
+  <div class="grid2" id="castgrid"></div>
+  <p class="minor" id="minor"></p>
+  <div class="empty" id="castempty" hidden>No cast members match that search.</div>
+</section>
+
+<section class="panel" id="panel-chapters" role="tabpanel" aria-labelledby="tab-chapters">
+  <h2>Chapter by chapter</h2>
+  <p class="lede">Page numbers follow the standard 628-page edition. Dotted phrases open a note. Tick a chapter when you finish it, and jot a margin note under any chapter.</p>
+  <div class="filters">
+    <div class="fgroup" role="group" aria-label="Filter by book" id="bookfilter"><span class="flabel">Book</span></div>
+    <div class="fgroup" role="group" aria-label="Filter by motif" id="motiffilter"><span class="flabel">Motif</span></div>
+  </div>
+  <div class="legend" aria-label="How sure each note is">
+    <span><span class="lvl lvl-solid">Solid</span> widely agreed</span>
+    <span><span class="lvl lvl-likely">Likely</span> common reading</span>
+    <span><span class="lvl lvl-debated">Debated</span> contested interpretation</span>
+  </div>
+  <div class="ctrl"><button class="btn" id="expall">Expand all</button><button class="btn" id="colall">Collapse all</button></div>
+  <div class="chlist" id="chlist"></div>
+  <div class="empty" id="chempty" hidden>No chapters match. Clear the search or the filters.</div>
+</section>
+
+<section class="panel" id="panel-words" role="tabpanel" aria-labelledby="tab-words">
+  <h2>Word decoder</h2>
+  <p class="lede">Joyce fuses words from many languages, so one word can carry several meanings at once. Pick a coinage to see it split into parts, then record your own reading.</p>
+  <div class="wgrid">
+    <div class="wlist" id="wlist" role="group" aria-label="Words"></div>
+    <div class="card" id="wdetail" aria-live="polite"></div>
+  </div>
+  <div class="empty" id="wempty" hidden style="margin-top:12px">No words match that search.</div>
+</section>
+
+<section class="panel" id="panel-say" role="tabpanel" aria-labelledby="tab-say">
+  <h2>Say it aloud</h2>
+  <p class="lede">The Wake is built for the ear. Tap a phrase to hear it in a Dublin voice, then read the respelling and say it yourself. Where a recorded clip is missing, your device's own voice reads it instead.</p>
+  <div class="row" style="margin-bottom:14px;align-items:center">
+    <button class="btn" id="playall">Play all in order</button>
+    <label class="chip" style="display:inline-flex;gap:8px;align-items:center"><input type="checkbox" id="slow"> Slow down</label>
+    <span class="status" id="saystatus" aria-live="polite"></span>
+  </div>
+  <div class="saylist" id="saylist"></div>
+  <p class="minor">Respellings are approximate and lean toward a Dublin accent. Audio generated with ElevenLabs.</p>
+</section>
+
+<section class="panel" id="panel-motifs" role="tabpanel" aria-labelledby="tab-motifs">
+  <h2>Recurring motifs</h2>
+  <p class="lede">The book repeats a small set of shapes at every scale. Follow one motif through the chapters and the book gets easier to hold.</p>
+  <div class="grid2" id="motifgrid"></div>
+  <div class="empty" id="motifempty" hidden>No motifs match that search.</div>
+</section>
+
+<section class="panel" id="panel-notes" role="tabpanel" aria-labelledby="tab-notes">
+  <h2>My notes</h2>
+  <p class="lede">Everything you write in a chapter, a note or a word lands here. Notes live in this browser only, so copy them out if you want to keep them.</p>
+  <div class="chlist" id="notelist"></div>
+  <div class="empty" id="noteempty">No notes yet. Open a chapter, click a dotted phrase, and write a comment.</div>
+  <div class="exp" id="exp" hidden>
+    <label class="field" for="exptext">Export as Markdown</label>
+    <textarea id="exptext" readonly></textarea>
+    <div class="row" style="margin-top:10px">
+      <button class="btn primary" id="copyall">Copy all notes</button>
+      <button class="btn" id="clearall">Clear all notes</button>
+      <span class="status" id="expstatus" aria-live="polite"></span>
+    </div>
+  </div>
+</section>
+
+</div></main>
+
+<footer><div class="wrap">
+  <p>This key is an original guide, not a reproduction of any published one, and it quotes the Wake only in fragments. Readings tagged Debated are interpretations. Page numbers follow the standard edition and may differ in other printings. Your notes stay on this device. Audio generated with ElevenLabs.</p>
+</div></footer>
+
+<script src="app.js" defer></script>
+</body>
+</html>

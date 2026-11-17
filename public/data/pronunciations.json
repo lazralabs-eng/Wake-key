@@ -1,0 +1,24 @@
+{
+  "voice": {
+    "name": "Sean - Irish Narrator (Dublin)",
+    "voice_id": "dT5SO0OPYGxTs2qJ5Cg2"
+  },
+  "items": [
+    {"id": "riverrun", "text": "riverrun", "say": "RIV-er-run", "note": "The first word of the book, and the tail end of its last sentence."},
+    {"id": "finnegans-wake", "text": "Finnegans Wake", "say": "FIN-ih-gunz WAKE", "note": "No apostrophe. Joyce kept the title secret for years and called it Work in Progress."},
+    {"id": "howth", "text": "Howth Castle and Environs", "speak": "Hoath Castle and Environs", "say": "HOHTH (rhymes with both)", "note": "The hill on Dublin Bay. Most visitors say it wrong, rhyming it with mouth."},
+    {"id": "vicus", "text": "commodius vicus of recirculation", "speak": "commodius veekus of recirculation", "say": "kuh-MOH-dee-us VEE-kus", "note": "Vico, the philosopher, is said VEE-ko. Vico Road runs along the coast south of Dublin."},
+    {"id": "hce", "text": "Humphrey Chimpden Earwicker", "say": "HUM-free CHIMP-den EER-wick-er", "note": "Usually just HCE, said as three letters."},
+    {"id": "alp", "text": "Anna Livia Plurabelle", "say": "AN-na LIV-ee-a PLOO-ra-bell", "note": "Anna Livia comes from the Liffey, Dublin's river."},
+    {"id": "liffey", "text": "the Liffey", "say": "LIFF-ee", "note": "The river through Dublin. ALP is the river."},
+    {"id": "chapelizod", "text": "Chapelizod", "say": "chap-el-IZ-od", "note": "The village where HCE keeps his pub. By tradition, Isolde's chapel."},
+    {"id": "shem-shaun", "text": "Shem and Shaun", "say": "SHEM and SHAWN", "note": "The rival twins. Shaun is the Irish Sean."},
+    {"id": "issy", "text": "Issy", "say": "ISS-ee", "note": "The daughter, Isabel. A mirror for Isolde."},
+    {"id": "fionn", "text": "Finn MacCool", "say": "FIN mak-COOL", "note": "The giant of Irish legend, in Irish Fionn mac Cumhaill. He sleeps under Dublin in the book."},
+    {"id": "persse", "text": "Persse O'Reilly", "say": "PURSE oh-RYE-lee", "note": "A pun on French perce-oreille, earwig: pairss-or-AY."},
+    {"id": "mamalujo", "text": "Mamalujo", "say": "MA-ma-LOO-joe", "note": "Matthew, Mark, Luke and John, squeezed into one name for the Four Old Men."},
+    {"id": "quarks", "text": "Three quarks for Muster Mark", "speak": "Three kwarks for Muster Mark", "say": "KWARK (rhymes with Mark)", "note": "Joyce's line rhymes quark with Mark. Physicists often say kwork instead."},
+    {"id": "museyroom", "text": "museyroom", "say": "MEW-zee-room", "note": "The museum in I.1, read with a lilt."},
+    {"id": "tristopher", "text": "Tristopher and Hilary", "say": "TRIS-to-fer and HIL-a-ree", "note": "The stolen children in the Prankquean tale. Tristram plus Christopher; sad and cheerful."}
+  ]
+}
