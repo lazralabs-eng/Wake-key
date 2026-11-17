@@ -44,7 +44,7 @@ Every push to `main` deploys. Add a custom domain under the Pages project's **Cu
 Clips are generated with the ElevenLabs API from two lists, each with its own voice, and committed to `public/audio/`:
 
 - `public/data/pronunciations.json`: names and coinages (Sean, Dublin narrator)
-- `public/data/readaloud.json`: the I.8 read-aloud (Sinéad, warm female Irish voice; includes per-voice settings such as `speed`)
+- `public/data/readaloud.json`: the I.8 read-aloud as a dialogue. `voices` maps each `speaker` (a, b) to a voice: Sinéad and Aoife, both female Irish voices, with per-voice settings such as `speed`
  The page plays them when present and falls back to the device's own voice (an Irish English voice where the device has one) when they are not.
 
 **One-time setup:** in GitHub, go to **Settings > Secrets and variables > Actions** and add a secret `ELEVENLABS_API_KEY`. Optional: a variable `ELEVEN_MODEL` to change the model (default `eleven_multilingual_v2`).
@@ -67,7 +67,7 @@ ELEVENLABS_API_KEY=... npm run audio:force       # everything
 
 Use `speak` when the voice mispronounces the written form; it is what gets spoken, while `text` is what is shown.
 
-If the API returns a voice-not-found error, add the voice (Sean or Sinéad) to **My Voices** in your ElevenLabs account first. Library voices must be in your account before the API can use them.
+If the API returns a voice-not-found error, add the voice (Sean, Sinéad or Aoife) to **My Voices** in your ElevenLabs account first. Library voices must be in your account before the API can use them.
 
 ## Updating content
 

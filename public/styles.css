@@ -191,3 +191,13 @@ footer{padding-bottom:max(40px,env(safe-area-inset-bottom))}
 .readt{font-style:italic;font-size:20px}
 .readmeta{font-size:13px;color:var(--muted);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .say.read .saynote{max-width:62ch}
+
+/* Two washerwomen */
+.say.read{border-left:5px solid var(--river)}
+.say.read.sp-b{border-left-color:var(--thunder);margin-left:28px}
+@media (max-width:520px){.say.read.sp-b{margin-left:12px}}
+.sp-b .playbtn{background:var(--thunder)}
+.who{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--river)}
+.sp-b .who,.sp-b-chip{color:var(--thunder)}
+.sp-a-chip{color:var(--river)}
+.readmeta .who{margin-right:2px}

@@ -2,27 +2,92 @@
   "title": "Anna Livia Plurabelle",
   "chapter": "I.8",
   "pages": "196-216",
-  "voice": {
-    "name": "Sinéad - Confident, Irish, warm",
-    "voice_id": "HHgUYJWWgtxj4ev19y6l",
-    "settings": { "stability": 0.5, "similarity_boost": 0.8, "style": 0.35, "use_speaker_boost": true, "speed": 0.9 }
+  "voices": {
+    "a": {
+      "label": "First washerwoman",
+      "name": "Sinéad - Confident, Irish, warm",
+      "voice_id": "HHgUYJWWgtxj4ev19y6l",
+      "settings": {
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "style": 0.35,
+        "use_speaker_boost": true,
+        "speed": 0.9
+      }
+    },
+    "b": {
+      "label": "Second washerwoman",
+      "name": "Aoife - Irish Professional",
+      "voice_id": "63T2Z5X6a8FKjTpmpqjH",
+      "settings": {
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "style": 0.35,
+        "use_speaker_boost": true,
+        "speed": 0.9
+      }
+    }
   },
+  "speakers_note": "Joyce rarely marks who speaks. This split follows the call-and-answer rhythm of the dialogue and is one reading among several.",
   "items": [
-    {"id": "ala-open", "text": "O tell me all about Anna Livia! I want to hear all about Anna Livia.", "l": "solid",
-     "note": "The chapter opens with one washerwoman begging the other for gossip. On the page these words form a triangle, the delta: Joyce's sign for ALP and the shape of a river mouth."},
-    {"id": "ala-telling", "text": "every telling has a taling and that's the he and the she of it.", "l": "likely",
-     "note": "Telling, tale and tail at once. Every story has a sequel and two sides, his and hers, which is the whole method of the book."},
-    {"id": "ala-tenses", "text": "Anna was, Livia is, Plurabelle's to be.", "l": "solid",
-     "note": "Past, present and future in seven words: Vico's cycle again. It also echoes the prayer line about what was in the beginning, is now, and ever shall be."},
-    {"id": "ala-shem", "text": "A tale told of Shaun or Shem?", "l": "solid",
-     "note": "Dusk is falling and the gossip turns to the twins. The women can no longer agree on which son is which."},
-    {"id": "ala-waters", "text": "Can't hear with the waters of.", "l": "solid",
-     "note": "The river grows louder as night comes, and the sentence breaks off the way the women lose each other's words across the water."},
-    {"id": "ala-elm", "text": "My foos won't moos. I feel as old as yonder elm.", "speak": "My foos won't moos. I feel as old as yonder elm.", "l": "likely",
-     "note": "Her feet won't move. One washerwoman is turning into the elm on the bank; the other is becoming a stone."},
-    {"id": "ala-stone", "text": "Telmetale of stem or stone.", "speak": "Tell me tale of stem or stone.", "l": "likely",
-     "note": "Tell me a tale, run together. Stem and stone are the tree and the rock the women become, and also the twins: Shem and Shaun, the living and the fixed."},
-    {"id": "ala-night", "text": "Beside the rivering waters of, hitherandthithering waters of. Night!", "speak": "Beside the rivering waters of, hither and thithering waters of. Night!", "l": "solid",
-     "note": "The chapter's last words. Joyce chose this ending for his own 1929 recording, and it is the best place to hear the Wake as music."}
+    {
+      "id": "ala-open",
+      "text": "O tell me all about Anna Livia! I want to hear all about Anna Livia.",
+      "l": "solid",
+      "note": "The chapter opens with one washerwoman begging the other for gossip. On the page these words form a triangle, the delta: Joyce's sign for ALP and the shape of a river mouth.",
+      "speaker": "a"
+    },
+    {
+      "id": "ala-telling",
+      "text": "every telling has a taling and that's the he and the she of it.",
+      "l": "likely",
+      "note": "Telling, tale and tail at once. Every story has a sequel and two sides, his and hers, which is the whole method of the book.",
+      "speaker": "b"
+    },
+    {
+      "id": "ala-tenses",
+      "text": "Anna was, Livia is, Plurabelle's to be.",
+      "l": "solid",
+      "note": "Past, present and future in seven words: Vico's cycle again. It also echoes the prayer line about what was in the beginning, is now, and ever shall be.",
+      "speaker": "a"
+    },
+    {
+      "id": "ala-shem",
+      "text": "A tale told of Shaun or Shem?",
+      "l": "solid",
+      "note": "Dusk is falling and the gossip turns to the twins. The women can no longer agree on which son is which.",
+      "speaker": "b"
+    },
+    {
+      "id": "ala-waters",
+      "text": "Can't hear with the waters of.",
+      "l": "solid",
+      "note": "The river grows louder as night comes, and the sentence breaks off the way the women lose each other's words across the water.",
+      "speaker": "a"
+    },
+    {
+      "id": "ala-elm",
+      "text": "My foos won't moos. I feel as old as yonder elm.",
+      "speak": "My foos won't moos. I feel as old as yonder elm.",
+      "l": "likely",
+      "note": "Her feet won't move. One washerwoman is turning into the elm on the bank; the other is becoming a stone.",
+      "speaker": "b"
+    },
+    {
+      "id": "ala-stone",
+      "text": "Telmetale of stem or stone.",
+      "speak": "Tell me tale of stem or stone.",
+      "l": "likely",
+      "note": "Tell me a tale, run together. Stem and stone are the tree and the rock the women become, and also the twins: Shem and Shaun, the living and the fixed.",
+      "speaker": "a"
+    },
+    {
+      "id": "ala-night",
+      "text": "Beside the rivering waters of, hitherandthithering waters of. Night!",
+      "speak": "Beside the rivering waters of, hither and thithering waters of. Night!",
+      "l": "solid",
+      "note": "The chapter's last words. Joyce chose this ending for his own 1929 recording, and it is the best place to hear the Wake as music.",
+      "speaker": "b"
+    }
   ]
 }

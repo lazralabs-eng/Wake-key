@@ -39,24 +39,28 @@ let made = 0, kept = 0, failed = 0;
 for (const src of SOURCES) {
   if (!existsSync(src)) continue;
   const data = JSON.parse(await readFile(src, 'utf8'));
-  const voice = data.voice.voice_id;
-  const settings = { ...DEFAULT_SETTINGS, ...(data.voice.settings || {}) };
-  console.log(`\n${path.basename(src)} (voice: ${data.voice.name || voice})`);
+  // A list names one `voice`, or several `voices` keyed by each item's `speaker`.
+  const voiceOf = it => (data.voices && data.voices[it.speaker]) || data.voice || Object.values(data.voices || {})[0];
+  console.log(`\n${path.basename(src)}`);
 
   // The filename carries a hash of what was spoken, so editing a phrase
-  // produces a new file and the service worker's cache-first rule stays safe.
+  // or changing its voice produces a new file and the service worker's
+  // cache-first rule stays safe.
   const fileFor = it => {
+    const voice = voiceOf(it).voice_id;
     const h = createHash('sha1').update([voice, model, it.speak || it.text].join('|')).digest('hex').slice(0, 8);
     return `${it.id}-${h}.mp3`;
   };
 
   for (const it of data.items) {
     allIds.add(it.id);
+    const v = voiceOf(it), voice = v.voice_id;
+    const settings = { ...DEFAULT_SETTINGS, ...(v.settings || {}) };
     const file = fileFor(it);
     const wanted = force || only.includes(it.id) || index[it.id] !== file || !existsSync(path.join(OUT, file));
     if (!wanted || (only.length && !only.includes(it.id))) { kept++; continue; }
 
-    process.stdout.write(`- ${it.id}: "${it.speak || it.text}" ... `);
+    process.stdout.write(`- ${it.id} [${v.name || voice}]: "${it.speak || it.text}" ... `);
     const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voice}?output_format=mp3_44100_128`, {
       method: 'POST',
       headers: { 'xi-api-key': key, 'Content-Type': 'application/json', Accept: 'audio/mpeg' },

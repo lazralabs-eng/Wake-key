@@ -519,7 +519,7 @@ function syncFields(){
 
 
 /* ---------- pronunciation ---------- */
-var SAY=[], READ=[], AUDIO={}, sayAudio=null, playQueue=null, queueBtn=null, irishVoice=null;
+var SAY=[], READ=[], READV={}, AUDIO={}, sayAudio=null, playQueue=null, queueBtn=null, irishVoice=null;
 function itemById(id){return SAY.concat(READ).filter(function(x){return x.id===id;})[0];}
 var ICON_PLAY='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
 var ICON_STOP='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10v10H7z"/></svg>';
@@ -544,11 +544,12 @@ function renderSay(){
 }
 function renderRead(){
   $('#readlist').innerHTML=READ.map(function(it,i){
-    var src=AUDIO[it.id]?'Dublin voice':'Device voice';
-    return '<div class="say read" id="say-'+it.id+'">'+
+    var src=AUDIO[it.id]?'Irish voice':'Device voice';
+    var sp=it.speaker||'a', who=(READV[sp]&&READV[sp].label)||'';
+    return '<div class="say read sp-'+sp+'" id="say-'+it.id+'">'+
       '<button type="button" class="playbtn" data-say="'+it.id+'" aria-label="Play line '+(i+1)+'">'+ICON_PLAY+'</button>'+
       '<div class="sayt readt">'+esc(it.text)+'<span class="src">'+src+'</span></div>'+
-      '<div class="readmeta">Line '+(i+1)+' of '+READ.length+' · '+lvl(it.l)+'</div>'+
+      '<div class="readmeta"><span class="who">'+esc(who)+'</span>Line '+(i+1)+' of '+READ.length+' · '+lvl(it.l)+'</div>'+
       '<p class="saynote">'+esc(it.note)+'</p></div>';
   }).join('');
 }
@@ -598,7 +599,7 @@ function loadSay(){
     fetch('data/pronunciations.json').then(function(r){return r.json();}),
     fetch('audio/index.json').then(function(r){return r.ok?r.json():{};}).catch(function(){return {};}),
     fetch('data/readaloud.json').then(function(r){return r.json();}).catch(function(){return {items:[]};})
-  ]).then(function(res){SAY=res[0].items||[];AUDIO=res[1]||{};READ=res[2].items||[];renderRead();renderSay();})
+  ]).then(function(res){SAY=res[0].items||[];AUDIO=res[1]||{};READ=res[2].items||[];READV=res[2].voices||{};if(res[2].speakers_note)$('#speakernote').textContent=res[2].speakers_note;renderRead();renderSay();})
   .catch(function(){$('#saylist').innerHTML='<div class="empty">The pronunciation list could not load. Check your connection and reload.</div>';});
 }
 document.addEventListener('click',function(e){

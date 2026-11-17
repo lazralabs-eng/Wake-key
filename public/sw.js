@@ -1,5 +1,5 @@
 // Bump VERSION on every content change so iPads pick up the new shell.
-const VERSION = 'wake-key-v2';
+const VERSION = 'wake-key-v3';
 const SHELL = ['./', 'index.html', 'styles.css', 'app.js', 'manifest.webmanifest',
   'data/pronunciations.json', 'data/readaloud.json', 'audio/index.json', 'icons/icon-192.png', 'icons/apple-touch-icon.png'];
 
